@@ -2,6 +2,14 @@ import { Client } from "../models/Client.mjs";
 
 export const createClient = async (req, res) => {
   try {
+    const validate = await Client.findOne({ document: req.body.document });
+    if (validate) {
+      return res.status(400).json({
+        status: "error",
+        message: "Client already exists",
+        data: null,
+      });
+    }
     const { firstName, lastName, document, email, phone, address } = req.body;
     const newClient = new Client({
       firstName,
